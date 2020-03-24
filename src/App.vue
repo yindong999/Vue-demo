@@ -10,7 +10,10 @@
       <router-link to="/my">我的信息</router-link> |
       <router-link :to="{name:'Home2',params: { userId: 123 }}" class="txt">命名路由</router-link> |
       <router-link :to="{path:'/nestNamedView'}" class="txt">嵌套命名视图</router-link> |
-      <router-link :to="{path:'/alias'}" class="txt">别名</router-link> |
+      <router-link :to="{path:'/b'}" class="txt">别名</router-link> |<br>
+      <router-link :to="{path:'/props/123'}" class="txt">使用props让组件和路由解耦（布尔模式）</router-link> |
+      <router-link :to="{path:'/props2'}" class="txt">使用props让组件和路由解耦（对象模式）</router-link> |
+      <router-link :to="{path:'/props3?q=123456'}" class="txt">使用props让组件和路由解耦（函数模式）</router-link> |
       <router-link to="/benbaobao">本宝宝</router-link> |
     </div>
     <transition>
@@ -20,6 +23,7 @@
 </template>
 
 <style lang="scss">
+ 
 .v-enter {
   // v-enter：定义进入过渡的开始状态。元素被插入之前生效，在元素被插入之后的下一帧移除
   transition: all 0.5s ease;
@@ -49,7 +53,10 @@
 }
 #nav {
   padding: 30px;
-
+  position: fixed;
+  bottom:0;
+  width:100%;
+  margin:0 auto;
   a {
     font-weight: bold;
     color: #2c3e50;

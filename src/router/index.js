@@ -8,6 +8,12 @@ const routes = [{
     path: '/',
     name: 'Home',
     component: () => import('../views/Home.vue'),
+    // 路由独享守卫
+    beforeEnter: (to, from, next) => {
+       console.log('beforeEnter',to)
+       console.log('beforeEnter',from)
+       next()
+    }
   },
   {
     path: '/Home2',
@@ -33,12 +39,12 @@ const routes = [{
   },
   {
     name:'dancanshu',
-    path: '/user/:id',
+    path: '/user/:id',//单参数路由匹配
     component: () => import('../views/more.vue')
   }, 
   {
     name:'duocanshu',
-    path: '/user/:username/even/:password',
+    path: '/user/:username/even/:password',// 多参数路由匹配
     component: () => import('../views/msg.vue')
   } ,
   {
@@ -68,7 +74,7 @@ const routes = [{
       } ,
       {
         name:'namedView2', 
-        path:'/my/namedView2',
+        path:'/my/namedView233333',
         components:{
           default:() => import('../views/comp/Foo2.vue'),
           a:() => import('../views/comp/Bar2.vue'),
@@ -97,18 +103,66 @@ const routes = [{
   {
     name:'alias', 
     path:'/alias',
-    alias: '/b',
+    alias: '/b', // 该属性配置路由的别名，访问别名和访问path、name一样 
+    component: () => import('../views/Home2.vue') 
+  } ,
+  {
+    name:'props', 
+    path:'/props/:id',
+    props:true,//使用props实现组件和路由解耦（布尔模式）
+    component: () => import('../views/Home2.vue') 
+  } ,
+  {
+    name:'props', 
+    path:'/props2',
+    props: { newsletterPopup: false },//使用props实现组件和路由解耦（对象模式）
+    component: () => import('../views/Home2.vue') 
+  } ,
+  {
+    name:'props', 
+    path:'/props3',
+    props: (route)=>({query:route.query.q}),//使用props实现组件和路由解耦（函数模式）
     component: () => import('../views/Home2.vue') 
   } ,
   {
     name:'notFonud', 
     path:'*',
-    component: () => import('../views/404.vue')
+    component: () => import('../views/404.vue')  // 使用路由懒加载模式
   } 
 ]
 
 const router = new VueRouter({
-  routes
+  mode: 'hash',// 路由模式，默认是hash模式，还有一种 history 模式
+  routes:routes,
+  // 配置页面的滚动行为
+  scrollBehavior (to, from, savedPosition) {
+    // savedPosition 只对浏览器的前进后退按钮有效
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 })
-
+// 全局前置守卫:当一个导航触发时，全局前置守卫按照创建顺序调用。守卫是异步解析执行，此时导航在所有守卫 resolve 完之前一直处于 等待中。
+// to: 即将进入的目标路由对象
+// from：当前导航正要离开的路由对象；
+// next :Function ，需要调用该方法来resolve这个钩子函数；执行效果依赖于next方法中的参数；
+//   next中参数的说明：
+router.beforeEach((to,from,next)=>{
+  console.log('beforeEach',to)
+  console.log('beforeEach',from)
+  next()
+})
+// 全局解析守卫:在导航被确认之前，同时在所有组件内守卫和异步路由组件被解析之后，解析守卫就被调用
+router.beforeResolve((to,from,next)=>{
+  console.log('beforeResolve',to)
+  console.log('beforeResolve',from)
+  next()
+})
+// 全局后置钩子
+router.afterEach((to,from)=>{
+  console.log('afterEach',to)
+  console.log('afterEach',from)
+})
 export default router

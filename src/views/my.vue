@@ -4,14 +4,20 @@
     <div>日期：{{time}}</div>
     <div>时间戳：{{time_pointer}}</div>
     <router-link to="namedView">命名视图组合一</router-link>&nbsp;&nbsp;|&nbsp;&nbsp;
-    <router-link :to="{path:'/my/namedView2'}">命名视图组合二</router-link>
+    <router-link :to="{path:'/my/namedView233333'}">命名视图组合二</router-link>
     <br />下面有视图三个，有一个是默认命名的，两个是重新命名的====》配置好命名视图，路由中配置好组件，可以让不同的组件显示在不同的路由中；
     <!-- 默认命名视图 -->
-    <router-view class="view one"></router-view>
-    <!-- 重新命名的视图a -->
-    <router-view class="view two" name="a"></router-view>
-    <!-- 重新命名的视图b -->
-    <router-view class="view three" name="b"></router-view>
+    <transition :name="transitionName">
+      <router-view class="view one"></router-view>
+    </transition>
+    <transition :name="transitionName">
+      <!-- 重新命名的视图a -->
+      <router-view class="view two" name="a"></router-view>
+    </transition>
+    <transition :name="transitionName">
+      <!-- 重新命名的视图b -->
+      <router-view class="view three" name="b"></router-view>
+    </transition>
   </div>
 </template>
 <script>
@@ -19,8 +25,17 @@ export default {
   data() {
     return {
       time: "",
+      transitionName: "",
       time_pointer: ""
     };
+  },
+  watch: {
+    $route(to, from) {
+      console.log("toDepth,fromDepths", to, from);
+      const toDepth = to.path.split("/")[2].length;
+      const fromDepth = from.path.split("/")[2].length;
+      this.transitionName = toDepth < fromDepth ? "slide-right" : "slide-left";
+    }
   },
   created() {
     var date = new Date();
@@ -73,7 +88,24 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
-.one {width: 100%;height: 100px;border: 1px solid red;background:skyblue;}
-.two {width: 20%;height: 300px;float: left;border: 1px solid blue;background:salmon;}
-.three {width: 80%;height: 300px;float: right;border: 1px solid orange;background:chartreuse;}
+.one {
+  width: 100%;
+  height: 100px;
+  border: 1px solid red;
+  background: skyblue;
+}
+.two {
+  width: 20%;
+  height: 300px;
+  float: left;
+  border: 1px solid blue;
+  background: salmon;
+}
+.three {
+  width: 80%;
+  height: 300px;
+  float: right;
+  border: 1px solid orange;
+  background: chartreuse;
+}
 </style>
